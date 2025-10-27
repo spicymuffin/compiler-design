@@ -1,0 +1,30 @@
+********** MiniC Compiler **********
+Lexical Analysis ...
+token1.kind = Token.LESSEQ
+token1.lexeme = "<="
+token1.srcPos.startLine = 1
+token1.srcPos.endLine = 1
+token1.srcPos.startCol = 1
+token1.srcPos.endCol = 2
+
+token2.kind = Token.EQ
+token2.lexeme = "=="
+token2.srcPos.startLine = 1
+token2.srcPos.endLine = 1
+token2.srcPos.startCol = 3
+token2.srcPos.endCol = 4
+
+token3.kind = Token.ASSIGN
+token3.lexeme = "="
+token3.srcPos.startLine = 1
+token3.srcPos.endLine = 1
+token3.srcPos.startCol = 5
+token3.srcPos.endCol = 5
+
+token4.kind = Token.EOF
+token4.lexeme = "$"
+token4.srcPos.startLine = 2
+token4.srcPos.endLine = 2
+token4.srcPos.startCol = 1
+token4.srcPos.endCol = 1
+

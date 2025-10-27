@@ -1,0 +1,43 @@
+
+plugins {
+    id 'base'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+base {
+    // Name of the generated jar file:
+    archivesName = "MiniC"
+}
+
+// Version of the generated jar file:
+version = 'Scanner'
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'MiniC Assignment 1',
+               'Implementation-Version': archiveVersion,
+               'Main-Class': 'minic.MiniC' // Class with the main method.
+  }
+}
+
+compileJava {
+    //enable compilation in a separate daemon process:
+    options.fork = true
+
+    //enable incremental compilation:
+    options.incremental = true
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['minic']
+    }
+  }
+}

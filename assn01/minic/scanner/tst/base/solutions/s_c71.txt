@@ -1,0 +1,18 @@
+********** MiniC Compiler **********
+Lexical Analysis ...
+ERROR: illegal escape sequence
+ERROR: unterminated string literal
+token1.kind = Token.STRINGLITERAL
+token1.lexeme = "string\""
+token1.srcPos.startLine = 1
+token1.srcPos.endLine = 1
+token1.srcPos.startCol = 1
+token1.srcPos.endCol = 9
+
+token2.kind = Token.EOF
+token2.lexeme = "$"
+token2.srcPos.startLine = 2
+token2.srcPos.endLine = 2
+token2.srcPos.startCol = 1
+token2.srcPos.endCol = 1
+
