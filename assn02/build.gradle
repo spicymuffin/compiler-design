@@ -1,0 +1,101 @@
+
+plugins {
+    id 'base'
+    id 'java-library'
+    id 'checkstyle'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+base {
+    // Name of the generated jar file:
+    archivesName = "MiniC"
+}
+
+
+// Version of the generated jar file:
+version = 'Parser'
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'MiniC Assignment 2',
+               'Implementation-Version': archiveVersion,
+               'Main-Class': 'minic.MiniC' // Class with the main method.
+  }
+}
+
+compileJava {
+
+    //enable compilation in a separate daemon process:
+    options.fork = true
+
+    //enable incremental compilation:
+    options.incremental = true
+
+}
+
+//into 'build/classes/main/MiniC'
+task copyClassfilesNoScanner(type: Copy) {
+    dependsOn compileJava
+    into 'build/classes/java/main/minic'
+    from 'resources/MiniC.class'
+    into('scanner') {
+        from 'resources/scanner/Scanner.class'
+    }
+}
+
+task jarNoScanner(dependsOn: [
+  'jar',
+  'copyClassfilesNoScanner'
+])
+
+task compile(dependsOn: ['compileJava'])
+
+task compileNoScanner(dependsOn: [
+  'compileJava',
+  'copyClassfilesNoScanner'
+])
+
+//
+// Set execution order of tasks, but not dependencies:
+//
+// A.mustRunAfter B means that if both tasks A and B are
+// scheduled for execution, then B must run first.
+//
+copyClassfilesNoScanner.mustRunAfter compileJava
+jar.mustRunAfter copyClassfilesNoScanner
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['minic']
+    }
+  }
+}
+
+repositories {
+    mavenCentral()
+}
+
+//
+// Configure checkstyle plugin:
+// * use google_checks.xml distributed with the tool 
+//
+checkstyle {
+  toolVersion = '12.1.1'
+  def archive = configurations.checkstyle.resolve().find { it.name.startsWith('checkstyle') }
+  config = resources.text.fromArchiveEntry(archive, 'google_checks.xml')
+}
+
+tasks.withType(Checkstyle) {
+    enabled = false // set to true to enforce checkstyle check 
+    reports {
+        xml.required = true // XML report
+        html.required = true // HTML report
+    }
+    showViolations = true // text output on the console
+}

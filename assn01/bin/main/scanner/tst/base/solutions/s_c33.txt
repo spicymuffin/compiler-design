@@ -1,0 +1,16 @@
+********** MiniC Compiler **********
+Lexical Analysis ...
+token1.kind = Token.BOOLLITERAL
+token1.lexeme = "false"
+token1.srcPos.startLine = 1
+token1.srcPos.endLine = 1
+token1.srcPos.startCol = 1
+token1.srcPos.endCol = 5
+
+token2.kind = Token.EOF
+token2.lexeme = "$"
+token2.srcPos.startLine = 2
+token2.srcPos.endLine = 2
+token2.srcPos.startCol = 1
+token2.srcPos.endCol = 1
+

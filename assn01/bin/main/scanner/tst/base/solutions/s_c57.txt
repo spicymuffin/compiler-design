@@ -1,0 +1,72 @@
+********** MiniC Compiler **********
+Lexical Analysis ...
+token1.kind = Token.LEFTPAREN
+token1.lexeme = "("
+token1.srcPos.startLine = 1
+token1.srcPos.endLine = 1
+token1.srcPos.startCol = 1
+token1.srcPos.endCol = 1
+
+token2.kind = Token.LEFTBRACE
+token2.lexeme = "{"
+token2.srcPos.startLine = 1
+token2.srcPos.endLine = 1
+token2.srcPos.startCol = 2
+token2.srcPos.endCol = 2
+
+token3.kind = Token.LEFTBRACKET
+token3.lexeme = "["
+token3.srcPos.startLine = 1
+token3.srcPos.endLine = 1
+token3.srcPos.startCol = 3
+token3.srcPos.endCol = 3
+
+token4.kind = Token.RIGHTBRACKET
+token4.lexeme = "]"
+token4.srcPos.startLine = 1
+token4.srcPos.endLine = 1
+token4.srcPos.startCol = 4
+token4.srcPos.endCol = 4
+
+token5.kind = Token.RIGHTBRACE
+token5.lexeme = "}"
+token5.srcPos.startLine = 1
+token5.srcPos.endLine = 1
+token5.srcPos.startCol = 5
+token5.srcPos.endCol = 5
+
+token6.kind = Token.RIGHTPAREN
+token6.lexeme = ")"
+token6.srcPos.startLine = 1
+token6.srcPos.endLine = 1
+token6.srcPos.startCol = 6
+token6.srcPos.endCol = 6
+
+token7.kind = Token.LESS
+token7.lexeme = "<"
+token7.srcPos.startLine = 1
+token7.srcPos.endLine = 1
+token7.srcPos.startCol = 7
+token7.srcPos.endCol = 7
+
+token8.kind = Token.LESS
+token8.lexeme = "<"
+token8.srcPos.startLine = 1
+token8.srcPos.endLine = 1
+token8.srcPos.startCol = 8
+token8.srcPos.endCol = 8
+
+token9.kind = Token.LESS
+token9.lexeme = "<"
+token9.srcPos.startLine = 1
+token9.srcPos.endLine = 1
+token9.srcPos.startCol = 9
+token9.srcPos.endCol = 9
+
+token10.kind = Token.EOF
+token10.lexeme = "$"
+token10.srcPos.startLine = 2
+token10.srcPos.endLine = 2
+token10.srcPos.startCol = 1
+token10.srcPos.endCol = 1
+

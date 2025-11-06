@@ -1,0 +1,9 @@
+********** MiniC Compiler **********
+Lexical Analysis ...
+token1.kind = Token.EOF
+token1.lexeme = "$"
+token1.srcPos.startLine = 2
+token1.srcPos.endLine = 2
+token1.srcPos.startCol = 1
+token1.srcPos.endCol = 1
+
