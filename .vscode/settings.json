@@ -1,7 +1,0 @@
-{
-  "java.import.gradle.enabled": false,
-  "java.project.sourcePaths": ["assn01"],
-  "java.configuration.runtimes": [
-    { "name": "JavaSE-25", "path": "/opt/java/openjdk" }
-  ]
-}
