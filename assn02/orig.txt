@@ -1,0 +1,63 @@
+program ::= (variable-def | function-def)*
+
+function-def   ::= typespecifier ID params compound-stmt
+variable-def   ::= typespecifier init-decl-list ";"
+init-decl-list ::= init-decl ("," init-decl)*
+init-decl      ::= declarator ("=" initializer)?
+declarator     ::= ID
+                 | ID "[" INTLITERAL "]"
+initializer    ::= expr
+                 | "{" expr ( "," expr )* "}"
+typespecifier  ::= void | int | bool | float
+
+compound-stmt ::= "{" variable-def* stmt* "}"
+stmt          ::= compound-stmt
+                | if-stmt
+                | while-stmt
+                | for-stmt
+                | return expr? ";"
+                | ID "=" expr ";"
+                | ID "[" expr "]" "=" expr ";"
+                | ID arglist ";"
+
+if-stmt    ::= if "(" expr ")" stmt ( else stmt )?
+while-stmt ::= while "(" expr ")" stmt
+for-stmt   ::= for "(" asgnexpr? ";" expr? ";" asgnexpr? ")" stmt
+
+expr             ::= or-expr
+or-expr          ::= and-expr
+                   | or-expr "||" and-expr
+and-expr         ::= relational-expr
+                   | and-expr "&&" relational-expr
+relational-expr  ::= add-expr
+                   | add-expr "==" add-expr
+                   | add-expr "!=" add-expr
+                   | add-expr "<"  add-expr
+                   | add-expr "<=" add-expr
+                   | add-expr ">"  add-expr
+                   | add-expr ">=" add-expr
+add-expr         ::= mult-expr
+                   | add-expr "+" mult-expr
+                   | add-expr "-" mult-expr
+mult-expr        ::= unary-expr
+                   | mult-expr "*" unary-expr
+                   | mult-expr "/" unary-expr
+unary-expr       ::= primary-expr
+                   | "+" unary-expr
+                   | "-" unary-expr
+                   | "!" unary-expr
+primary-expr     ::= ID arglist?
+                   | ID "[" expr "]"
+                   | "(" expr ")"
+                   | INTLITERAL
+                   | BOOLLITERAL
+                   | FLOATLITERAL
+                   | STRINGLITERAL
+
+asgnexpr     ::= ID "=" expr
+params       ::= "(" params-list? ")"
+params-list  ::= parameter-decl ( "," parameter-decl )*
+parameter-decl ::= typespecifier declarator
+arglist      ::= "(" args? ")"
+args         ::= arg ( "," arg )*
+arg          ::= expr

@@ -1,0 +1,34 @@
+program {"void", "int", "bool", "float", eps}
+func-def {"("}
+var-def {"[", "=", ",", ";"}
+init-decl {"ID"}
+
+declarator {"ID"}
+
+initializer {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!", "{"}
+
+typespec {"void", "int", "bool", "float"}
+
+compound-stmt {"{"}
+stmt {"{", "if", "while", "for", "return", "ID"}
+
+if-stmt {"if"}
+while-stmt {"while"}
+for-stmt {"for"}
+
+expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}
+and-expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}
+relational-expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}
+
+add-expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}
+mult-expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}
+unary-expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}
+
+primary-expr {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL"}
+
+asgnexpr {"ID"}
+
+params-list {"void", "int", "bool", "float"}
+parameter-decl {"void", "int", "bool", "float"}
+arglist {"("}
+args {"ID", "(", "INTLITERAL", "BOOLLITERAL", "FLOATLITERAL", "STRINGLITERAL", "+", "-", "!"}

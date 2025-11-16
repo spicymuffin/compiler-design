@@ -36,10 +36,10 @@ public final class Scanner {
     return (c >= 'a' && c <= 'z');
   }
 
-  private boolean isLetter(char c) {
-    c |= 32;
-    return (c >= 'a' && c <= 'z');
-  }
+  // private boolean isLetter(char c) {
+  //   c |= 32;
+  //   return (c >= 'a' && c <= 'z');
+  // }
 
   private int laq_idx(int off) {
     int m = off % MAX_LOOKAHEAD;

@@ -1,0 +1,45 @@
+program         ::= (typespec "ID" (var-def | func-def))*
+func-def        ::= ("(" params-list? ")" compound-stmt)
+var-def         ::= ("[" "INTLITERAL" "]")? ("=" initializer)? ("," init-decl)* ";"
+init-decl       ::= declarator ("=" initializer)?
+
+declarator      ::= "ID" ("[" "INTLITERAL" "]")?
+
+initializer     ::= expr
+                |   "{" expr ("," expr)* "}"
+
+typespec        ::= "void" | "int" | "bool" | "float"
+
+compound-stmt   ::= "{" (typespec "ID" var-def)* stmt* "}"
+stmt            ::= compound-stmt
+                |   if-stmt
+                |   while-stmt
+                |   for-stmt
+                |   "return" expr? ";"
+                |   "ID" ((("[" expr "]")? "=" expr) | arglist) ";"
+
+if-stmt         ::= "if" "(" expr ")" stmt ("else" stmt )?
+while-stmt      ::= "while" "(" expr ")" stmt
+for-stmt        ::= "for" "(" asgnexpr? ";" expr? ";" asgnexpr? ")" stmt
+
+expr            ::= and-expr ("||" and-expr)*
+and-expr        ::= relational-expr ("&&" relational-expr)*
+relational-expr ::= add-expr (("==" | "!=" | "<" | "<=" | ">" | ">=") add-expr)?
+
+add-expr        ::= mult-expr (("+"|"-") mult-expr)*
+mult-expr       ::= unary-expr (("*"|"/") unary-expr)*
+unary-expr      ::= primary-expr | (("+"|"-"|"!") unary-expr)
+
+primary-expr    ::= "ID" (arglist? | "[" expr "]")
+                |   "(" expr ")"
+                |   "INTLITERAL"
+                |   "BOOLLITERAL"
+                |   "FLOATLITERAL"
+                |   "STRINGLITERAL"
+
+asgnexpr        ::= "ID" "=" expr
+
+params-list     ::= parameter-decl ("," parameter-decl)*
+parameter-decl  ::= typespec declarator
+arglist         ::= "(" args? ")"
+args            ::= expr ("," expr)*

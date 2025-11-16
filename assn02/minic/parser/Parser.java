@@ -11,7 +11,7 @@ public class Parser {
 
   private Scanner scanner;
   private ErrorReporter errorReporter;
-  private Token currentToken;
+  private Token ct;
 
   /**
    * Constructor.
@@ -24,30 +24,235 @@ public class Parser {
     errorReporter = reporter;
   }
 
-  // accept() checks whether the current token matches tokenExpected.
+  // #region first
+  private boolean first_program(int tok) {
+    if (tok == Token.VOID)
+      return true;
+    if (tok == Token.INT)
+      return true;
+    if (tok == Token.BOOL)
+      return true;
+    if (tok == Token.FLOAT)
+      return true;
+    // if (tok == -1)
+    // return true;
+    return false;
+  }
+
+  private boolean first_func_def(int tok) {
+    if (tok == Token.LEFTPAREN)
+      return true;
+    return false;
+  }
+
+  private boolean first_var_def(int tok) {
+    if (tok == Token.LEFTBRACKET)
+      return true;
+    if (tok == Token.ASSIGN)
+      return true;
+    if (tok == Token.COMMA)
+      return true;
+    if (tok == Token.SEMICOLON)
+      return true;
+    return false;
+  }
+
+  private boolean first_init_decl(int tok) {
+    if (tok == Token.ID)
+      return true;
+    return false;
+  }
+
+  private boolean first_declarator(int tok) {
+    if (tok == Token.ID)
+      return true;
+    return false;
+  }
+
+  private boolean first_initializer(int tok) {
+    if (tok == Token.ID)
+      return true;
+    if (tok == Token.LEFTPAREN)
+      return true;
+    if (tok == Token.INTLITERAL)
+      return true;
+    if (tok == Token.BOOLLITERAL)
+      return true;
+    if (tok == Token.FLOATLITERAL)
+      return true;
+    if (tok == Token.STRINGLITERAL)
+      return true;
+    if (tok == Token.PLUS)
+      return true;
+    if (tok == Token.MINUS)
+      return true;
+    if (tok == Token.NOT)
+      return true;
+    if (tok == Token.LEFTBRACE)
+      return true;
+    return false;
+  }
+
+  private boolean first_typespec(int tok) {
+    if (tok == Token.VOID)
+      return true;
+    if (tok == Token.INT)
+      return true;
+    if (tok == Token.BOOL)
+      return true;
+    if (tok == Token.FLOAT)
+      return true;
+    return false;
+  }
+
+  private boolean first_compound_stmt(int tok) {
+    if (tok == Token.LEFTBRACE)
+      return true;
+    return false;
+  }
+
+  private boolean first_stmt(int tok) {
+    if (tok == Token.LEFTBRACE)
+      return true;
+    if (tok == Token.IF)
+      return true;
+    if (tok == Token.WHILE)
+      return true;
+    if (tok == Token.FOR)
+      return true;
+    if (tok == Token.RETURN)
+      return true;
+    if (tok == Token.ID)
+      return true;
+    return false;
+  }
+
+  private boolean first_if_stmt(int tok) {
+    if (tok == Token.IF)
+      return true;
+    return false;
+  }
+
+  private boolean first_while_stmt(int tok) {
+    if (tok == Token.WHILE)
+      return true;
+    return false;
+  }
+
+  private boolean first_for_stmt(int tok) {
+    if (tok == Token.FOR)
+      return true;
+    return false;
+  }
+
+  private boolean first_expr(int tok) {
+    if (tok == Token.ID)
+      return true;
+    if (tok == Token.LEFTPAREN)
+      return true;
+    if (tok == Token.INTLITERAL)
+      return true;
+    if (tok == Token.BOOLLITERAL)
+      return true;
+    if (tok == Token.FLOATLITERAL)
+      return true;
+    if (tok == Token.STRINGLITERAL)
+      return true;
+    if (tok == Token.PLUS)
+      return true;
+    if (tok == Token.MINUS)
+      return true;
+    if (tok == Token.NOT)
+      return true;
+    return false;
+  }
+
+  private boolean first_and_expr(int tok) {
+    return first_expr(tok);
+  }
+
+  private boolean first_relational_expr(int tok) {
+    return first_expr(tok);
+  }
+
+  private boolean first_add_expr(int tok) {
+    return first_expr(tok);
+  }
+
+  private boolean first_mult_expr(int tok) {
+    return first_expr(tok);
+  }
+
+  private boolean first_unary_expr(int tok) {
+    return first_expr(tok);
+  }
+
+  private boolean first_primary_expr(int tok) {
+    if (tok == Token.ID)
+      return true;
+    if (tok == Token.LEFTPAREN)
+      return true;
+    if (tok == Token.INTLITERAL)
+      return true;
+    if (tok == Token.BOOLLITERAL)
+      return true;
+    if (tok == Token.FLOATLITERAL)
+      return true;
+    if (tok == Token.STRINGLITERAL)
+      return true;
+    return false;
+  }
+
+  private boolean first_asgnexpr(int tok) {
+    if (tok == Token.ID)
+      return true;
+    return false;
+  }
+
+  private boolean first_params_list(int tok) {
+    return first_typespec(tok);
+  }
+
+  private boolean first_parameter_decl(int tok) {
+    return first_typespec(tok);
+  }
+
+  private boolean first_arglist(int tok) {
+    if (tok == Token.LEFTPAREN)
+      return true;
+    return false;
+  }
+
+  private boolean first_args(int tok) {
+    return first_expr(tok);
+  }
+  // #endregion
+
+  // accept(int tokenExpected) checks whether the current token matches
+  // tokenExpected.
   // If so, it fetches the next token.
   // If not, it reports a syntax error.
   void accept(int tokenExpected) throws SyntaxError {
-    if (currentToken.kind == tokenExpected) {
-      currentToken = scanner.scan();
+    if (ct.kind == tokenExpected) {
+      ct = scanner.scan();
     } else {
       syntaxError("\"%\" expected here", Token.spell(tokenExpected));
     }
   }
 
-  // acceptIt() unconditionally accepts the current token
+  // accept() unconditionally accepts the current token
   // and fetches the next token from the scanner.
-  void acceptIt() {
-    currentToken = scanner.scan();
+  void accept() {
+    ct = scanner.scan();
   }
 
   void syntaxError(String messageTemplate, String tokenQuoted) throws SyntaxError {
-    SourcePos pos = currentToken.getSourcePos();
+    SourcePos pos = ct.getSourcePos();
     errorReporter.reportError(messageTemplate, tokenQuoted, pos);
     throw (new SyntaxError());
   }
 
-  boolean isTypeSpecifier(int token) {
+  boolean is_typespec(int token) {
     if (token == Token.VOID
         || token == Token.INT
         || token == Token.BOOL
@@ -65,91 +270,303 @@ public class Parser {
    * input. It is the top-level exception handler for SyntaxError exceptions.
    */
   public void parse() {
-
-    currentToken = scanner.scan(); // get first token from scanner...
+    ct = scanner.scan(); // get first token from scanner...
 
     try {
       parseProgram();
-      if (currentToken.kind != Token.EOF) {
+      if (ct.kind != Token.EOF) {
         syntaxError("\"%\" not expected after end of program",
-            currentToken.getLexeme());
+            ct.getLexeme());
       }
     } catch (SyntaxError s) {
-      return; /* to be refined in Assignment 3... */
+      return;
     }
     return;
   }
 
-  /**
-   * parseProgram is the top-level parsing routine responsible for parsing an
-   * entire MiniC program.
-   *
-   * <p>
-   * program ::= ( (VOID|INT|BOOL|FLOAT) ID ( FunPart | VarPart ) )*
-   */
   public void parseProgram() throws SyntaxError {
-    while (isTypeSpecifier(currentToken.kind)) {
-      acceptIt();
+    while (is_typespec(ct.kind)) {
+      accept();
       accept(Token.ID);
-      if (currentToken.kind == Token.LEFTPAREN) {
-        parseFunPart();
+      if (first_func_def(ct.kind)) {
+        parse_func_def();
+      } else if (first_var_def(ct.kind)) {
+        parse_var_def();
       } else {
-        parseVarPart();
+        syntaxError("\"%\" not expected", ct.getLexeme());
       }
     }
   }
 
-  /**
-   * parseFunPart parses the function-declaration part of a MiniC delaration.
-   *
-   * <p>
-   * FunPart ::= ( "(" ParamsList? ")" CompoundStmt )
-   */
-  public void parseFunPart() throws SyntaxError {
-    // We already know that the current token is "(".
-    // Otherwise use accept() !
-    acceptIt();
-    if (isTypeSpecifier(currentToken.kind)) {
-      parseParamsList();
+  public void parse_func_def() throws SyntaxError {
+    accept(Token.LEFTPAREN);
+    if (first_params_list(ct.kind)) {
+      parse_params_list();
     }
     accept(Token.RIGHTPAREN);
-    parseCompoundStmt();
+    parse_compound_stmt();
   }
 
-  /**
-   * parseParamsList parses the parameter declarations of a MiniC function.
-   *
-   * <p>
-   * ParamsList ::= ParameterDecl ( "," ParameterDecl ) *
-   */
-  public void parseParamsList() throws SyntaxError {
-    // to be completed by you...
-
+  public void parse_var_def() throws SyntaxError {
+    if (ct.kind == Token.LEFTBRACKET) {
+      accept();
+      accept(Token.INTLITERAL);
+      accept(Token.RIGHTBRACKET);
+    }
+    if (ct.kind == Token.ASSIGN) {
+      accept();
+      parse_initializer();
+    }
+    while (ct.kind == Token.COMMA) {
+      accept();
+      parse_init_decl();
+    }
+    accept(Token.SEMICOLON);
   }
 
-  /**
-   * parseCompoundStmt parses the MiniC compound statements.
-   *
-   * <p>
-   * CompoundStmt ::= "{" VariableDef* Stmt* "}"
-   */
-  public void parseCompoundStmt() throws SyntaxError {
-    // to be completed by you...
-
+  public void parse_init_decl() throws SyntaxError {
+    parse_declarator();
+    if (ct.kind == Token.ASSIGN) {
+      accept();
+      parse_initializer();
+    }
   }
 
-  /**
-   * parseVarPart parses the variable-portion of a MiniC declaration.
-   *
-   * <p>
-   * VarPart ::= ( "[" INTLITERAL "]" )? ( "=" initializer ) ? ( "," init_decl)*
-   * ";"
-   */
-  public void parseVarPart() throws SyntaxError {
-    // to be completed by you...
-
+  public void parse_declarator() throws SyntaxError {
+    accept(Token.ID);
+    if (ct.kind == Token.LEFTBRACKET) {
+      accept();
+      accept(Token.INTLITERAL);
+      accept(Token.RIGHTBRACKET);
+    }
   }
 
-  // to be completed by you...
+  public void parse_initializer() throws SyntaxError {
+    if (first_expr(ct.kind)) {
+      parse_expr();
+    } else if (ct.kind == Token.LEFTBRACE) {
+      accept();
+      parse_expr();
+      while (ct.kind == Token.COMMA) {
+        accept();
+        parse_expr();
+      }
+      accept(Token.RIGHTBRACE);
+    } else {
+      syntaxError("\"%\" not expected", ct.getLexeme());
+    }
+  }
 
+  public void parse_typespec() throws SyntaxError {
+    if (first_typespec(ct.kind)) {
+      accept();
+    } else {
+      syntaxError("\"%\" not expected", ct.getLexeme());
+    }
+  }
+
+  public void parse_compound_stmt() throws SyntaxError {
+    accept(Token.LEFTBRACE);
+    while (first_typespec(ct.kind)) {
+      accept();
+      accept(Token.ID);
+      parse_var_def();
+    }
+    while (first_stmt(ct.kind)) {
+      parse_stmt();
+    }
+    accept(Token.RIGHTBRACE);
+  }
+
+  public void parse_stmt() throws SyntaxError {
+    if (first_compound_stmt(ct.kind)) {
+      parse_compound_stmt();
+    } else if (first_if_stmt(ct.kind)) {
+      parse_if_stmt();
+    } else if (first_while_stmt(ct.kind)) {
+      parse_while_stmt();
+    } else if (first_for_stmt(ct.kind)) {
+      parse_for_stmt();
+    } else if (ct.kind == Token.RETURN) {
+      accept();
+      if (first_expr(ct.kind)) {
+        parse_expr();
+      }
+      accept(Token.SEMICOLON);
+    } else if (ct.kind == Token.ID) {
+      accept();
+      if (ct.kind == Token.LEFTBRACKET || ct.kind == Token.ASSIGN) {
+        if (ct.kind == Token.LEFTBRACKET) {
+          accept();
+          parse_expr();
+          accept(Token.RIGHTBRACKET);
+        }
+        accept(Token.ASSIGN);
+        parse_expr();
+      } else if (first_arglist(ct.kind)) {
+        parse_arglist();
+      } else {
+        syntaxError("\"%\" not expected", ct.getLexeme());
+      }
+      accept(Token.SEMICOLON);
+    } else {
+      syntaxError("\"%\" not expected", ct.getLexeme());
+    }
+  }
+
+  public void parse_if_stmt() throws SyntaxError {
+    accept(Token.IF);
+    accept(Token.LEFTPAREN);
+    parse_expr();
+    accept(Token.RIGHTPAREN);
+    parse_stmt();
+    if (ct.kind == Token.ELSE) {
+      accept(Token.ELSE);
+      parse_stmt();
+    }
+  }
+
+  public void parse_while_stmt() throws SyntaxError {
+    accept(Token.WHILE);
+    accept(Token.LEFTPAREN);
+    parse_expr();
+    accept(Token.RIGHTPAREN);
+    parse_stmt();
+  }
+
+  public void parse_for_stmt() throws SyntaxError {
+    accept(Token.FOR);
+    accept(Token.LEFTPAREN);
+    if (first_asgnexpr(ct.kind)) {
+      parse_asgnexpr();
+    }
+    accept(Token.SEMICOLON);
+    if (first_expr(ct.kind)) {
+      parse_expr();
+    }
+    accept(Token.SEMICOLON);
+    if (first_asgnexpr(ct.kind)) {
+      parse_asgnexpr();
+    }
+    accept(Token.RIGHTPAREN);
+    parse_stmt();
+  }
+
+  public void parse_expr() throws SyntaxError {
+    parse_and_expr();
+    while (ct.kind == Token.OR) {
+      accept();
+      parse_and_expr();
+    }
+  }
+
+  public void parse_and_expr() throws SyntaxError {
+    parse_relational_expr();
+    while (ct.kind == Token.AND) {
+      accept();
+      parse_relational_expr();
+    }
+  }
+
+  public void parse_relational_expr() throws SyntaxError {
+    parse_add_expr();
+    if (ct.kind == Token.EQ
+        || ct.kind == Token.NOTEQ
+        || ct.kind == Token.LESS
+        || ct.kind == Token.LESSEQ
+        || ct.kind == Token.GREATER
+        || ct.kind == Token.GREATEREQ) {
+      accept();
+      parse_add_expr();
+    }
+  }
+
+  public void parse_add_expr() throws SyntaxError {
+    parse_mult_expr();
+    while (ct.kind == Token.PLUS || ct.kind == Token.MINUS) {
+      accept();
+      parse_mult_expr();
+    }
+  }
+
+  public void parse_mult_expr() throws SyntaxError {
+    parse_unary_expr();
+    while (ct.kind == Token.TIMES || ct.kind == Token.DIV) {
+      accept();
+      parse_unary_expr();
+    }
+  }
+
+  public void parse_unary_expr() throws SyntaxError {
+    if (first_primary_expr(ct.kind)) {
+      parse_primary_expr();
+    } else if (ct.kind == Token.PLUS
+        || ct.kind == Token.MINUS
+        || ct.kind == Token.NOT) {
+      accept();
+      parse_unary_expr();
+    } else {
+      syntaxError("\"%\" not expected", ct.getLexeme());
+    }
+  }
+
+  public void parse_primary_expr() throws SyntaxError {
+    if (ct.kind == Token.ID) {
+      accept();
+      if (ct.kind == Token.LEFTBRACKET) {
+        accept();
+        parse_expr();
+        accept(Token.RIGHTBRACKET);
+      } else if (first_arglist(ct.kind)) {
+        parse_arglist();
+      }
+      // dont throw error else cuz arglist can derive to epsilon?
+    } else if (ct.kind == Token.LEFTPAREN) {
+      accept();
+      parse_expr();
+      accept(Token.RIGHTPAREN);
+    } else if (ct.kind == Token.INTLITERAL
+        || ct.kind == Token.BOOLLITERAL
+        || ct.kind == Token.FLOATLITERAL
+        || ct.kind == Token.STRINGLITERAL) {
+      accept();
+    } else {
+      syntaxError("\"%\" not expected", ct.getLexeme());
+    }
+  }
+
+  public void parse_asgnexpr() throws SyntaxError {
+    accept(Token.ID);
+    accept(Token.ASSIGN);
+    parse_expr();
+  }
+
+  public void parse_params_list() throws SyntaxError {
+    parse_parameter_decl();
+    while (ct.kind == Token.COMMA) {
+      accept();
+      parse_parameter_decl();
+    }
+  }
+
+  public void parse_parameter_decl() throws SyntaxError {
+    parse_typespec();
+    parse_declarator();
+  }
+
+  public void parse_arglist() throws SyntaxError {
+    accept(Token.LEFTPAREN);
+    if (first_args(ct.kind)) {
+      parse_args();
+    }
+    accept(Token.RIGHTPAREN);
+  }
+
+  public void parse_args() throws SyntaxError {
+    parse_expr();
+    while (ct.kind == Token.COMMA) {
+      accept();
+      parse_expr();
+    }
+  }
 }
