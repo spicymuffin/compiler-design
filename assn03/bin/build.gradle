@@ -1,0 +1,73 @@
+
+plugins {
+    id 'base'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+base {
+    // Name of the generated jar file:
+    archivesName = "MiniC"
+}
+
+// Version of the generated jar file:
+version = 'AstGen'
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'MiniC Assignment 3',
+               'Implementation-Version': archiveVersion,
+               'Main-Class': 'minic.MiniC' // Class with the main method.
+  }
+}
+
+compileJava {
+
+    //enable compilation in a separate daemon process:
+    options.fork = true
+
+    //enable incremental compilation:
+    options.incremental = true
+
+}
+
+task copyClassfilesNoScanner(type: Copy) {
+    into 'build/classes/java/main/minic'
+    from 'resources/MiniC.class'
+    into('scanner') {
+        from 'resources/scanner/Scanner.class'
+    }
+}
+
+task jarNoScanner(dependsOn: [
+  'jar',
+  'copyClassfilesNoScanner'
+])
+
+task compile(dependsOn: ['compileJava'])
+
+task compileNoScanner(dependsOn: [
+  'compileJava',
+  'copyClassfilesNoScanner'])
+
+//
+// Set execution order of tasks, but not dependencies:
+//
+// A.mustRunAfter B means that if both tasks A and B are
+// scheduled for execution, then B must run first.
+//
+copyClassfilesNoScanner.mustRunAfter compileJava
+jar.mustRunAfter copyClassfilesNoScanner
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['minic']
+    }
+  }
+}
