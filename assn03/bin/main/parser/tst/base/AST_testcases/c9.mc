@@ -1,4 +1,0 @@
-// no statements:
-void main()
-{
-}
