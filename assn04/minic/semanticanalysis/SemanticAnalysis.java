@@ -34,20 +34,20 @@ public class SemanticAnalysis implements Visitor {
     scopeStack.enter("putLn", StdEnvironment.putLn);
   }
 
-  /*
   //
   // Prints the name of a class,
   // usefull for debugging...
   //
   private void PrintClassName(AST t) {
-  System.out.println("The class of " + t +
-  " is " + t.getClass().getName());
+    System.out.println("The class of " + t +
+        " is " + t.getClass().getName());
   }
-   */
 
-  /** Method typeOfDecl(). 
+  /**
+   * Method typeOfDecl().
    *
-   *<p>For FunDecl, VarDecl and FormalParamDecl, this function returns
+   * <p>
+   * For FunDecl, VarDecl and FormalParamDecl, this function returns
    * the type of the declaration.
    * 1) for functions declarations, this is the return type of the function
    * 2) for variable declarations, this is the type of the variable
@@ -69,8 +69,9 @@ public class SemanticAnalysis implements Visitor {
     return t;
   }
 
-  /** Method typeOfArrayType(AST d) returns the element type of an
-   *  ArrayType AST node.
+  /**
+   * Method typeOfArrayType(AST d) returns the element type of an
+   * ArrayType AST node.
    */
   private Type typeOfArrayType(AST d) {
     assert (d != null);
@@ -79,64 +80,69 @@ public class SemanticAnalysis implements Visitor {
     return t.astType;
   }
 
-  /** Method hasIntOrFloatArgs(Operator op) returns true, if an operator
+  /**
+   * Method hasIntOrFloatArgs(Operator op) returns true, if an operator
    * accepts integer or floating point arguments.
    * <int> x <int> -> <sometype>
    * <float> x <float> -> <sometype>
    */
   private boolean hasIntOrFloatArgs(Operator op) {
     return (op.Lexeme.equals("+")
-            || op.Lexeme.equals("-")
-            || op.Lexeme.equals("*")
-            || op.Lexeme.equals("/")
-            || op.Lexeme.equals("<")
-            || op.Lexeme.equals("<=")
-            || op.Lexeme.equals(">")
-            || op.Lexeme.equals(">=")
-            || op.Lexeme.equals("==")
-            || op.Lexeme.equals("!="));
+        || op.Lexeme.equals("-")
+        || op.Lexeme.equals("*")
+        || op.Lexeme.equals("/")
+        || op.Lexeme.equals("<")
+        || op.Lexeme.equals("<=")
+        || op.Lexeme.equals(">")
+        || op.Lexeme.equals(">=")
+        || op.Lexeme.equals("==")
+        || op.Lexeme.equals("!="));
   }
 
-  /** Method hasBoolArgs(Operator op) returns true, if an operator accepts
+  /**
+   * Method hasBoolArgs(Operator op) returns true, if an operator accepts
    * bool arguments.
    * <bool> x <bool> -> <sometype>
    */
   private boolean hasBoolArgs(Operator op) {
     return (op.Lexeme.equals("&&")
-            || op.Lexeme.equals("||")
-            || op.Lexeme.equals("!")
-            || op.Lexeme.equals("!=")
-            || op.Lexeme.equals("=="));
+        || op.Lexeme.equals("||")
+        || op.Lexeme.equals("!")
+        || op.Lexeme.equals("!=")
+        || op.Lexeme.equals("=="));
   }
 
-  /* Method hasBoolReturnType(Operator op) returns true, if an operator
+  /*
+   * Method hasBoolReturnType(Operator op) returns true, if an operator
    * returns a bool value.
-   *  <sometype> x <sometype> -> bool
+   * <sometype> x <sometype> -> bool
    */
   private boolean hasBoolReturnType(Operator op) {
     return (op.Lexeme.equals("&&")
-            || op.Lexeme.equals("||")
-            || op.Lexeme.equals("!")
-            || op.Lexeme.equals("!=")
-            || op.Lexeme.equals("==")
-            || op.Lexeme.equals("<")
-            || op.Lexeme.equals("<=")
-            || op.Lexeme.equals(">")
-            || op.Lexeme.equals(">="));
+        || op.Lexeme.equals("||")
+        || op.Lexeme.equals("!")
+        || op.Lexeme.equals("!=")
+        || op.Lexeme.equals("==")
+        || op.Lexeme.equals("<")
+        || op.Lexeme.equals("<=")
+        || op.Lexeme.equals(">")
+        || op.Lexeme.equals(">="));
   }
 
-  /** Method i2f(Expr e) performs coercion of an integer-valued
+  /**
+   * Method i2f(Expr e) performs coercion of an integer-valued
    * expression e.
    * It creates an i2f operator and a unary expression.
    * Expression e becomes the expression-AST of this unary expression.
-   * 
-   *<p>:        Expr AST for e <int>
+   *
+   * <p>
+   * : Expr AST for e <int>
    * =>
-   *            UnaryExpr <float>
-   *              |     \
-   *              |      \
-   *              |       \
-   *           i2f<int>   Expr AST for e <int>
+   * UnaryExpr <float>
+   * | \
+   * | \
+   * | \
+   * i2f<int> Expr AST for e <int>
    */
   private Expr i2f(Expr e) {
     Operator op = new Operator("i2f", new SourcePos());
@@ -146,7 +152,8 @@ public class SemanticAnalysis implements Visitor {
     return expAst;
   }
 
-  /** Method getNrOfFormalParams(FunDecl f) returns the number
+  /**
+   * Method getNrOfFormalParams(FunDecl f) returns the number
    * of formal parameters for a function. E.g., for the following function
    * void foo (int a, bool b){}
    * the return value will be 2.
@@ -156,7 +163,7 @@ public class SemanticAnalysis implements Visitor {
     int nrArgs = 0;
     Decl d = f.paramsAST;
     assert ((d instanceof EmptyFormalParamDecl)
-            || (d instanceof FormalParamDeclSequence));
+        || (d instanceof FormalParamDeclSequence));
     if (d instanceof EmptyFormalParamDecl) {
       return 0;
     }
@@ -164,16 +171,17 @@ public class SemanticAnalysis implements Visitor {
       nrArgs++;
       d = ((FormalParamDeclSequence) d).rAST;
       assert ((d instanceof EmptyFormalParamDecl)
-              || (d instanceof FormalParamDeclSequence));
+          || (d instanceof FormalParamDeclSequence));
     }
     return nrArgs;
   }
 
-  /** Method getFormalParam(FunDecl f, int nr) returns, for a function
+  /**
+   * Method getFormalParam(FunDecl f, int nr) returns, for a function
    * declaration, the AST for the formal parameter nr (nr is the number
    * the parameter).
    * E.g., for the following function and nr=2,
-   *    void foo (int a, bool b){}
+   * void foo (int a, bool b){}
    * the AST returned will be "bool b".
    * Note: this function assumes the AST tree layout from Assignment 3.
    */
@@ -190,7 +198,8 @@ public class SemanticAnalysis implements Visitor {
     return (FormalParamDecl) s.lAST;
   }
 
-  /** Method getNrOfActualParams(CallExpr f) gets the number of actual
+  /**
+   * Method getNrOfActualParams(CallExpr f) gets the number of actual
    * parameters of a function call expression:
    * Similar to GetNrOfFormalParams above.
    * Note: this function assumes the AST tree layout from Assignment 3.
@@ -199,7 +208,7 @@ public class SemanticAnalysis implements Visitor {
     int nrArgs = 0;
     Expr p = f.paramAST;
     assert ((p instanceof EmptyActualParam)
-            || (p instanceof ActualParamSequence));
+        || (p instanceof ActualParamSequence));
     if (p instanceof EmptyActualParam) {
       return 0;
     }
@@ -207,12 +216,13 @@ public class SemanticAnalysis implements Visitor {
       nrArgs++;
       p = ((ActualParamSequence) p).rAST;
       assert ((p instanceof EmptyActualParam)
-              || (p instanceof ActualParamSequence));
+          || (p instanceof ActualParamSequence));
     }
     return nrArgs;
   }
 
-  /** Method getActualParam(CallExpr f, int nr), given a function
+  /**
+   * Method getActualParam(CallExpr f, int nr), given a function
    * call expression, gets the actual parameter nr
    * (nr is the number of the parameter).
    * Similar to GetFormalParam above.
@@ -234,7 +244,6 @@ public class SemanticAnalysis implements Visitor {
   // Given a type t, this function can be used to print the type.
   // Useful for debuggging, a similar mechanism is used in the
   // TreeDrawer Visitor.
-  /*
   private String getTypeTag(Type t) {
     String l = new String("");
     if (t == null) {
@@ -256,65 +265,65 @@ public class SemanticAnalysis implements Visitor {
     }
     return l;
   }
-  */
 
   // This array of strings contains the error messages that we generate
   // for errors detected during semantic analysis. These messages are
   // output using the ErrorReporter.
   // Example: reporter.reportError(errMsg[0], "", new SourcePos());
-  //          will print "ERROR #0: main function is missing".
+  // will print "ERROR #0: main function is missing".
   private String[] errMsg = {
-    "#0: main function missing",
-    "#1: return type of main must be int",
+      "#0: main function missing",
+      "#1: return type of main must be int",
 
-    // defining occurrences of identifiers,
-    // for local, global variables and for formal parameters:
-    "#2: identifier redeclared",
-    "#3: identifier declared void",
-    "#4: identifier declared void[]",
+      // defining occurrences of identifiers,
+      // for local, global variables and for formal parameters:
+      "#2: identifier redeclared",
+      "#3: identifier declared void",
+      "#4: identifier declared void[]",
 
-    // applied occurrences of identifiers:
-    "#5: undeclared identifier",
+      // applied occurrences of identifiers:
+      "#5: undeclared identifier",
 
-    // assignment statements:
-    "#6: incompatible types for =",
-    "#7: invalid lvalue in assignment",
+      // assignment statements:
+      "#6: incompatible types for =",
+      "#7: invalid lvalue in assignment",
 
-    // expression types:
-    "#8: incompatible type for return statement",
-    "#9: incompatible types for binary operator",
-    "#10: incompatible type for unary operator",
+      // expression types:
+      "#8: incompatible type for return statement",
+      "#9: incompatible types for binary operator",
+      "#10: incompatible type for unary operator",
 
-    // scalars:
-    "#11: attempt to use a function as a scalar",
+      // scalars:
+      "#11: attempt to use a function as a scalar",
 
-    // arrays:
-    "#12: attempt to use scalar/function as an array",
-    "#13: wrong type for element in array initializer",
-    "#14: invalid initializer: array initializer for scalar",
-    "#15: invalid initializer: scalar initializer for array",
-    "#16: too many elements in array initializer",
-    "#17: array subscript is not an integer",
-    "#18: array size missing",
+      // arrays:
+      "#12: attempt to use scalar/function as an array",
+      "#13: wrong type for element in array initializer",
+      "#14: invalid initializer: array initializer for scalar",
+      "#15: invalid initializer: scalar initializer for array",
+      "#16: too many elements in array initializer",
+      "#17: array subscript is not an integer",
+      "#18: array size missing",
 
-    // functions:
-    "#19: attempt to reference a scalar/array as a function",
+      // functions:
+      "#19: attempt to reference a scalar/array as a function",
 
-    // conditional expressions:
-    "#20: \"if\" conditional is not of type boolean",
-    "#21: \"for\" conditional is not of type boolean",
-    "#22: \"while\" conditional is not of type boolean",
+      // conditional expressions:
+      "#20: \"if\" conditional is not of type boolean",
+      "#21: \"for\" conditional is not of type boolean",
+      "#22: \"while\" conditional is not of type boolean",
 
-    // parameters:
-    "#23: too many actual parameters",
-    "#24: too few actual parameters",
-    "#25: wrong type for actual parameter"
+      // parameters:
+      "#23: too many actual parameters",
+      "#24: too few actual parameters",
+      "#25: wrong type for actual parameter, %,"
   };
 
-
-  /** Method check().
+  /**
+   * Method check().
    *
-   *<p>Checks whether the source program, represented by its AST, satisfies the
+   * <p>
+   * Checks whether the source program, represented by its AST, satisfies the
    * language's scope rules and type rules.
    * Decorates the AST as follows:
    * (a) Each applied occurrence of an identifier or operator is linked to
@@ -325,12 +334,15 @@ public class SemanticAnalysis implements Visitor {
     visit(progAst);
     // STEP 3:
     // Check Error 0
-    // 
+    //
     // Retrieve "main" from the scope stack. If it is not there (null is
     // returned, then the program does not contain a main function.
 
     /* Start of your code: */
-
+    Decl main_decl = scopeStack.retrieve("main");
+    if (main_decl == null) {
+      reporter.reportError(errMsg[0], "", progAst.pos);
+    }
     /* End of your code */
   }
 
@@ -351,16 +363,22 @@ public class SemanticAnalysis implements Visitor {
     // name is already present in this scope.
 
     /* Start of your code: */
+    if (!scopeStack.enter(x.idAST.Lexeme, x)) {
+      reporter.reportError(errMsg[2], x.idAST.Lexeme, x.idAST.pos);
+    }
 
     /* End of your code */
 
     // STEP 3:
-    // Check Error 1: 
+    // Check Error 1:
     // If this function is the "main" function, then ensure that
     // x.tAST is of type int.
 
     /* Start of your code: */
-
+    if (x.idAST.Lexeme.equals("main") && !currentFunctionReturnType.Tequal(StdEnvironment.intType)) {
+      reporter.reportError(errMsg[1], x.idAST.Lexeme,
+          x.idAST.pos);
+    }
     /* End of your code */
 
     // STEP 1:
@@ -370,9 +388,8 @@ public class SemanticAnalysis implements Visitor {
     // function's compound_stmt.
 
     /* Start of your code: */
-
+    scopeStack.openScope();
     /* End of your code */
-
 
     // The following flag is needed when we visit compound statements {...},
     // to avoid opening a fresh scope for function bodies (because we have
@@ -401,15 +418,24 @@ public class SemanticAnalysis implements Visitor {
     // Error 2 in that case.
 
     /* Start of your code: */
-
+    if (!scopeStack.enter(x.astIdent.Lexeme, x)) {
+      reporter.reportError(errMsg[2], x.astIdent.Lexeme, x.astIdent.pos);
+    }
     /* End of your code */
 
     // STEP 3:
-    // Check that the formal parameter is not of type void or void[]. 
+    // Check that the formal parameter is not of type void or void[].
     // Report error messages 3 and 4 respectively:
 
     /* Start of your code: */
-
+    // TODO: errormsg #4
+    if (x.astType instanceof ArrayType && ((ArrayType) x.astType).astType.Tequal(StdEnvironment.voidType)) {
+      reporter.reportError(errMsg[4], x.astIdent.Lexeme,
+          x.astType.pos);
+    } else if (x.astType.Tequal(StdEnvironment.voidType)) {
+      reporter.reportError(errMsg[3], x.astIdent.Lexeme,
+          x.astType.pos);
+    }
     /* End of your code */
   }
 
@@ -433,23 +459,32 @@ public class SemanticAnalysis implements Visitor {
   public void visit(AssignStmt x) {
     x.lAST.accept(this);
     x.rAST.accept(this);
-    //STEP 2:
+    // STEP 2:
     // Here we type-check assignment statements
     // Two conditions must be ensured:
     // 1) The type of the right-hand side of the assignment statement
-    //    (x.rAST.type) must be assignment-compatible
-    //    to the left-hand side of the assignment statement.
-    //    You can use x.rAST.type.AssignableTo to test assignment-compatibility
-    //    of the type of the left-hand side (x.lAST.type).
+    // (x.rAST.type) must be assignment-compatible
+    // to the left-hand side of the assignment statement.
+    // You can use x.rAST.type.AssignableTo to test assignment-compatibility
+    // of the type of the left-hand side (x.lAST.type).
     // 2) If 2 types are assignment-compatible, then we need to check
-    //    whether a coercion from int to float is needed. You can use
-    //    x.lAST.type.Tequal(StdEnvironment.floatType) to check whether
-    //    the left-hand side is of type float. Check the right-hand side
-    //    for type int and use i2f if a coercion is needed. Hint: the return
-    //    statement uses a similar mechanism....
+    // whether a coercion from int to float is needed. You can use
+    // x.lAST.type.Tequal(StdEnvironment.floatType) to check whether
+    // the left-hand side is of type float. Check the right-hand side
+    // for type int and use i2f if a coercion is needed. Hint: the return
+    // statement uses a similar mechanism....
     // If conditions (1) is violated, you should report Error 6.
 
     /* Start of your code: */
+    // condition 1
+    if (x.rAST.type.AssignableTo(x.lAST.type)) {
+      if (x.lAST.type.Tequal(StdEnvironment.floatType) && x.rAST.type.Tequal(StdEnvironment.intType)) {
+        x.rAST = i2f(x.rAST);
+      }
+    } else {
+      reporter.reportError(errMsg[6], "", x.rAST.pos);
+    }
+    // type coercion
 
     /* End of your code */
 
@@ -461,13 +496,18 @@ public class SemanticAnalysis implements Visitor {
   /** visit method for IfStmt. */
   public void visit(IfStmt x) {
     x.eAST.accept(this);
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting an if statement. If the condition x.eAST.type
     // is not of type bool, we have to issue Error 20. You can have a
     // look at "for" loops, which use a similar check for the loop condition.
 
     /* Start of your code: */
-
+    if (!(x.eAST instanceof EmptyExpr)) {
+      x.eAST.accept(this);
+      if (!x.eAST.type.Tequal(StdEnvironment.boolType)) {
+        reporter.reportError(errMsg[20], "", x.eAST.pos);
+      }
+    }
     /* End of your code */
     x.thenAST.accept(this);
     if (x.elseAST != null) {
@@ -478,13 +518,20 @@ public class SemanticAnalysis implements Visitor {
   /** visit method for WhileStmt. */
   public void visit(WhileStmt x) {
     x.eAST.accept(this);
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting a while statement. If the loop condition
     // is not of type bool, we have to issue Error 22. You can have a
     // look at "for" loops which use a similar check.
 
-    /* Start of your code: */
+    // System.out.println("COVERAGE: WHILE LOOP");
 
+    /* Start of your code: */
+    if (!(x.eAST instanceof EmptyExpr)) {
+      x.eAST.accept(this);
+      if (!x.eAST.type.Tequal(StdEnvironment.boolType)) {
+        reporter.reportError(errMsg[22], "", x.eAST.pos);
+      }
+    }
     /* End of your code */
     x.stmtAST.accept(this);
   }
@@ -511,9 +558,9 @@ public class SemanticAnalysis implements Visitor {
     // statement's expression with the return type of the function.
     // Uncomment this code
     // as soon as you have finished type-checking of expressions.
-    /* START:
+
     if (x.eAST instanceof EmptyExpr) {
-      // ``return;'' requires void function return type:
+      // "return;" requires void function return type:
       if (!currentFunctionReturnType.Tequal(StdEnvironment.voidType)) {
         reporter.reportError(errMsg[8], "", x.eAST.pos);
       }
@@ -535,7 +582,6 @@ public class SemanticAnalysis implements Visitor {
     } else {
       reporter.reportError(errMsg[8], "", x.eAST.pos);
     }
-    END */
   }
 
   /** visit method for CompoundStmt. */
@@ -555,7 +601,7 @@ public class SemanticAnalysis implements Visitor {
       // a function body.
 
       /* Start of your code: */
-
+      scopeStack.openScope();
       /* End of your code */
     }
     // STEP 1:
@@ -564,7 +610,8 @@ public class SemanticAnalysis implements Visitor {
     // AstGen/CompoundStmt.java to learn about the AST children of this node.
 
     /* Start of your code: */
-
+    x.astDecl.accept(this);
+    x.astStmt.accept(this);
     /* End of your code */
 
     // STEP 1:
@@ -572,7 +619,7 @@ public class SemanticAnalysis implements Visitor {
     // for this compound statement (even if it represents a function body).
 
     /* Start of your code: */
-
+    scopeStack.closeScope();
     /* End of your code */
   }
 
@@ -587,7 +634,10 @@ public class SemanticAnalysis implements Visitor {
     // a function.
 
     /* Start of your code: */
-
+    // TODO: check empty scopes (emptycompoundstmts)
+    if (isFunctionBlock) {
+      scopeStack.closeScope();
+    }
     /* End of your code */
   }
 
@@ -604,7 +654,7 @@ public class SemanticAnalysis implements Visitor {
     if (!(x.eAST instanceof EmptyExpr)) {
       x.eAST.accept(this);
       if (x.tAST instanceof ArrayType) {
-        //STEP 4:
+        // STEP 4:
         //
         // Array declarations.
         // Check for error messages 15, 16, 13.
@@ -612,9 +662,42 @@ public class SemanticAnalysis implements Visitor {
 
         /* Start of your code: */
 
+        if (!(x.eAST instanceof ExprSequence)) {
+          reporter.reportError(errMsg[15], "", x.pos);
+        }
+
+        // x.eAST is an ExprSequence
+        else {
+          Type arr_type = ((ArrayType) x.tAST).astType;
+          int nelem = 0;
+          int maxelem = ((ArrayType) x.tAST).GetRange();
+          ExprSequence ptr = (ExprSequence) x.eAST;
+
+          while (true) {
+            if (!ptr.lAST.type.Tequal(arr_type)) {
+              if (arr_type.Tequal(StdEnvironment.floatType) && ptr.lAST.type.Tequal(StdEnvironment.intType)) {
+                ptr.lAST = i2f(ptr.lAST);
+              } else {
+                reporter.reportError(errMsg[13], "", ptr.lAST.pos);
+              }
+            }
+
+            nelem++;
+            if (nelem > maxelem) {
+              reporter.reportError(errMsg[16], "", x.pos);
+            }
+
+            if (ptr.rAST instanceof EmptyExpr) {
+              break;
+            } else {
+              ptr = (ExprSequence) ptr.rAST;
+            }
+          }
+        }
+
         /* End of your code */
       } else {
-        //STEP 4:
+        // STEP 4:
         //
         // Non-array declarations, i.e., scalar variables.
         // Check for error messages 14, 6.
@@ -622,25 +705,52 @@ public class SemanticAnalysis implements Visitor {
 
         /* Start of your code: */
 
+        if (x.eAST instanceof ExprSequence) {
+          reporter.reportError(errMsg[14], "", x.pos);
+        }
+
+        // if types do not match
+        else if (!x.tAST.Tequal(x.eAST.type)) {
+          // exception for float = int, we do an implicit conversion
+          if (x.tAST.Tequal(StdEnvironment.floatType) && x.eAST.type.Tequal(StdEnvironment.intType)) {
+            x.eAST = i2f(x.eAST);
+          } else {
+            reporter.reportError(errMsg[6], "", x.pos);
+          }
+        }
+
         /* End of your code */
       }
     }
-    //STEP 1:
+    // STEP 1:
     // Here we are visiting a variable declaration x.
     // Enter this variable into the scope stack. Like with formal parameters,
     // if an identifier of the same name is already present, then you should
     // report Error 2.
 
     /* Start of your code: */
+    if (!scopeStack.enter(x.idAST.Lexeme, x)) {
+      reporter.reportError(errMsg[2], x.idAST.Lexeme, x.idAST.pos);
+    }
 
     /* End of your code */
 
     // STEP 3:
-    // Check that the variable is not of type void or void[]. 
+    // Check that the variable is not of type void or void[].
     // Report error messages 3 and 4 respectively:
 
     /* Start of your code: */
+    // TODO: check errormsg #4, this one isnt checked wiith a testcase
+    if ((x.tAST instanceof ArrayType) && ((ArrayType) x.tAST).astType.Tequal(StdEnvironment.voidType)) {
+      reporter.reportError(errMsg[4], x.idAST.Lexeme,
+          x.tAST.pos);
 
+    } else if (x.tAST.Tequal(StdEnvironment.voidType)) {
+      // for some reason here we have to report the whole thing's position, while in
+      // the formal param declratation we have to report only the id
+      reporter.reportError(errMsg[3], x.idAST.Lexeme,
+          x.pos);
+    }
     /* End of your code */
   }
 
@@ -653,7 +763,7 @@ public class SemanticAnalysis implements Visitor {
   /** visit method for VarExpr. */
   public void visit(VarExpr x) {
     x.Ident.accept(this);
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting a variable expression.
     // Its type is synthesized from the type of the applied occurrence
     // of its identifier. Use "instanceof" to find out whether x.Ident.declAST
@@ -661,6 +771,11 @@ public class SemanticAnalysis implements Visitor {
     // Error 11 and set x.type to the error type from StdEnvironment.
     x.type = typeOfDecl(x.Ident.declAST);
     /* Start of your code: */
+
+    if (x.Ident.declAST instanceof FunDecl) {
+      x.type = StdEnvironment.errorType;
+      reporter.reportError(errMsg[11], "", x.pos);
+    }
 
     /* End of your code */
   }
@@ -686,49 +801,49 @@ public class SemanticAnalysis implements Visitor {
 
   /** visit method for IntExpr. */
   public void visit(IntExpr x) {
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting an integer literal. Set x.type of this
     // AST node to the int type from the standard environment
     // (StdEnvironment.intType).
 
     /* Start of your code: */
-
+    x.type = StdEnvironment.intType;
     /* End of your code */
   }
 
   /** visit method for FloatExpr. */
   public void visit(FloatExpr x) {
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting a float literal. Set x.type of this
     // AST node to the float type from the standard environment
     // (StdEnvironment.floatType).
 
     /* Start of your code: */
-
+    x.type = StdEnvironment.floatType;
     /* End of your code */
   }
 
   /** visit method for BoolExpr. */
   public void visit(BoolExpr x) {
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting a bool literal. Set x.type of this
     // AST node to the bool type from the standard environment
     // (StdEnvironment.boolType).
 
     /* Start of your code: */
-
+    x.type = StdEnvironment.boolType;
     /* End of your code */
   }
 
   /** visit method for StringExpr. */
   public void visit(StringExpr x) {
-    //STEP 2:
+    // STEP 2:
     // Here we are visiting a string literal. Set x.type of this
     // AST node to the string type from the standard environment
     // (StdEnvironment.stringType).
 
     /* Start of your code: */
-
+    x.type = StdEnvironment.stringType;
     /* End of your code */
   }
 
@@ -742,7 +857,7 @@ public class SemanticAnalysis implements Visitor {
     VarExpr ve = (VarExpr) x.idAST;
     if (!(typeOfDecl(ve.Ident.declAST) instanceof ArrayType)) {
       reporter.reportError(errMsg[12], "", x.pos);
-      x.type = StdEnvironment.errorType; 
+      x.type = StdEnvironment.errorType;
     } else {
       x.type = typeOfArrayType(x.idAST.type);
     }
@@ -764,7 +879,7 @@ public class SemanticAnalysis implements Visitor {
         }
         return;
       } else if (x.lAST.type.Tequal(StdEnvironment.floatType)
-                 && x.rAST.type.Tequal(StdEnvironment.floatType)) {
+          && x.rAST.type.Tequal(StdEnvironment.floatType)) {
         x.oAST.type = StdEnvironment.floatType;
         if (hasBoolReturnType(x.oAST)) {
           x.type = StdEnvironment.boolType;
@@ -773,7 +888,7 @@ public class SemanticAnalysis implements Visitor {
         }
         return;
       } else if (x.lAST.type.Tequal(StdEnvironment.intType)
-                 && x.rAST.type.Tequal(StdEnvironment.floatType)) {
+          && x.rAST.type.Tequal(StdEnvironment.floatType)) {
         // coercion of left operand to float:
         x.lAST = i2f(x.lAST);
         x.oAST.type = StdEnvironment.floatType;
@@ -784,7 +899,7 @@ public class SemanticAnalysis implements Visitor {
         }
         return;
       } else if (x.lAST.type.Tequal(StdEnvironment.floatType)
-                 && x.rAST.type.Tequal(StdEnvironment.intType)) {
+          && x.rAST.type.Tequal(StdEnvironment.intType)) {
         // STEP 2:
         // This code is part of the type checking for binary
         // expressions. In this case,
@@ -793,7 +908,13 @@ public class SemanticAnalysis implements Visitor {
         // This is the dual case to "int x float" above.
 
         /* Start of your code: */
-
+        x.rAST = i2f(x.rAST);
+        x.oAST.type = StdEnvironment.floatType;
+        if (hasBoolReturnType(x.oAST)) {
+          x.type = StdEnvironment.boolType;
+        } else {
+          x.type = StdEnvironment.floatType;
+        }
         /* End of your code */
         return;
       }
@@ -821,7 +942,7 @@ public class SemanticAnalysis implements Visitor {
   public void visit(UnaryExpr x) {
     x.oAST.accept(this);
     x.eAST.accept(this);
-    //STEP 2:
+    // STEP 2:
     // Here we synthesize the type attribute for a unary operator.
     // x.eAST.type contains the type of the subexpression of this
     // unary operator.
@@ -831,7 +952,7 @@ public class SemanticAnalysis implements Visitor {
     // have to be set to x.eAST.type.
     //
     // If x.eAST is of type bool, and if x.oAST is an operator that
-    // supports bool, then x.type is bool, but  x.oAST.type is of type
+    // supports bool, then x.type is bool, but x.oAST.type is of type
     // int (because of the JVM convention to represent true and false
     // as ints.
     //
@@ -842,6 +963,34 @@ public class SemanticAnalysis implements Visitor {
     // slightly more complicated case.
 
     /* Start of your code: */
+
+    if (x.eAST.type.Tequal(StdEnvironment.floatType) || x.eAST.type.Tequal(StdEnvironment.intType)) {
+      if (x.oAST.Lexeme.equals("-") || x.oAST.Lexeme.equals("+")) {
+        x.type = x.eAST.type;
+        x.oAST.type = x.eAST.type;
+      } else {
+        x.type = StdEnvironment.errorType;
+        x.oAST.type = StdEnvironment.errorType;
+        reporter.reportError(errMsg[10], "", x.pos);
+      }
+    }
+
+    else if (x.eAST.type.Tequal(StdEnvironment.boolType)) {
+      if (x.oAST.Lexeme.equals("!")) {
+        x.type = StdEnvironment.boolType;
+        x.oAST.type = StdEnvironment.boolType;
+      } else {
+        x.type = StdEnvironment.errorType;
+        x.oAST.type = StdEnvironment.errorType;
+        reporter.reportError(errMsg[10], "", x.pos);
+      }
+    }
+
+    else {
+      x.type = StdEnvironment.errorType;
+      x.oAST.type = StdEnvironment.errorType;
+      reporter.reportError(errMsg[10], "", x.pos);
+    }
 
     /* End of your code */
   }
@@ -878,13 +1027,17 @@ public class SemanticAnalysis implements Visitor {
     // Use "instanceof" to find out if D is a FunDecl. If not, report
     // Error 19 and *return*.
     // This check detects cases like
-    //  int f; f(22);
-    // where f is not a function. 
+    // int f; f(22);
+    // where f is not a function.
 
     /* Start of your code: */
-
+    if (!(d instanceof FunDecl)) {
+      // TODO: error message #19
+      reporter.reportError(errMsg[19], "", x.pos);
+      return;
+    }
     /* End of your code */
-    FunDecl f = (FunDecl ) d;
+    FunDecl f = (FunDecl) d;
     // STEP 2:
     // Check that the number of formal args from f and the number of actual
     // parameters of the function call x match.
@@ -893,7 +1046,16 @@ public class SemanticAnalysis implements Visitor {
     // the number of formal and actual parameters.
 
     /* Start of your code: */
-
+    // TODO: errmsg 23, 24
+    int n_formal_params = getNrOfFormalParams(f);
+    int n_actual_params = getNrOfActualParams(x);
+    if (n_actual_params > n_formal_params) {
+      reporter.reportError(errMsg[23], "", x.pos);
+      return;
+    } else if (n_actual_params < n_formal_params) {
+      reporter.reportError(errMsg[24], "", x.pos);
+      return;
+    }
     /* End of your code */
 
     // STEP 2:
@@ -912,27 +1074,34 @@ public class SemanticAnalysis implements Visitor {
     // Perform type coercion (int->float) of the *actual* parameter if necessary.
     //
 
-    /* You can use the following code as part of your solution. Uncomment
+    /*
+     * You can use the following code as part of your solution. Uncomment
      * the following code as soon as you have type-checking
      * of expressions working.
      *
      * Start of your code:
      */
 
-    /*
     int nrFormalParams = getNrOfFormalParams(f);
     for (int i = 1; i <= nrFormalParams; i++) {
+
       FormalParamDecl form = getFormalParam(f, i);
       ActualParam act = getActualParam(x, i);
       Type formalT = form.astType;
       Type actualT = act.pAST.type;
-      // ... 
-
+      if (actualT.AssignableTo(formalT)) {
+        if (formalT.Tequal(StdEnvironment.floatType) && actualT.Tequal(StdEnvironment.intType)) {
+          // TODO: im not sure if this is the right node to be injecting
+          act.pAST = i2f(act.pAST);
+        }
+      } else {
+        reporter.reportError(errMsg[25], "parameter " + i, x.pos);
+      }
     }
-    */
+
     /* End of your code */
 
-    // If we fall through here, no semantic error occurred -> set the 
+    // If we fall through here, no semantic error occurred -> set the
     // return type of the call expression to the return type of
     // its function:
     x.type = typeOfDecl(f);
@@ -955,34 +1124,36 @@ public class SemanticAnalysis implements Visitor {
       x.declAST = binding;
     }
     /* Start of your code: */
-
+    else {
+      reporter.reportError(errMsg[5], "", x.pos);
+    }
     /* End of your code */
   }
 
   /** visit method for Operator. */
   public void visit(Operator x) {
 
-  } 
+  }
 
   /** visit method for IntLiteral. */
   public void visit(IntLiteral x) {
 
-  } 
+  }
 
   /** visit method for FloatLiteral. */
   public void visit(FloatLiteral x) {
 
-  } 
+  }
 
   /** visit method for BoolLiteral. */
   public void visit(BoolLiteral x) {
 
-  } 
+  }
 
   /** visit method for StringLiteral. */
   public void visit(StringLiteral x) {
 
-  } 
+  }
 
   /** visit method for IntType. */
   public void visit(IntType x) {
@@ -1008,7 +1179,6 @@ public class SemanticAnalysis implements Visitor {
   public void visit(VoidType x) {
 
   }
-
 
   /** visit method for ArrayType. */
   public void visit(ArrayType x) {

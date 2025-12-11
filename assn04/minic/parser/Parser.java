@@ -258,13 +258,16 @@ public class Parser {
   }
 
   private Expr parseInitializer() throws SyntaxError {
+    SourcePos pos = new SourcePos();
+    start(pos);
     if (currentToken.kind == Token.LEFTBRACE) {
       acceptIt();
 
       Expr first = parseExpr();
       Expr e = parseExprList();
-      ExprSequence seq = new ExprSequence(first, e, previousTokenPosition);
       accept(Token.RIGHTBRACE);
+      finish(pos);
+      ExprSequence seq = new ExprSequence(first, e, pos);
       return seq;
     } else {
       return parseExpr();
@@ -558,8 +561,8 @@ public class Parser {
       acceptIt();
       if (currentToken.kind == Token.LEFTPAREN) {
         Expr args = parseArgList();
-        accept(Token.SEMICOLON);
         finish(pos);
+        accept(Token.SEMICOLON);
         return new CallStmt(new CallExpr(id, args, pos), pos);
       } else if (currentToken.kind == Token.LEFTBRACKET) {
         acceptIt();
