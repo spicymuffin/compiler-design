@@ -1,0 +1,113 @@
+
+plugins {
+    id 'base'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+base {
+    // Name of the generated jar file:
+    archivesName = "MiniC"
+}
+
+
+// Name of the generated jar file:
+version = 'CodeGen'
+
+jar {
+  manifest {
+    attributes 'Implementation-Title': 'MiniC Assignment 5',
+               'Implementation-Version': archiveVersion,
+               'Main-Class': 'minic.MiniC' // Class with the main method.
+  }
+}
+
+compileJava {
+
+   //enable compilation in a separate daemon process:
+   options.fork = true
+
+   //enable incremental compilation:
+   options.incremental = true
+
+}
+
+task copyClassfilesNoScanner(type: Copy) {
+  from 'resources/scanner_only/'
+  into 'build/classes/java/main/minic'
+  include '**/*.class'
+}
+
+task copyClassfilesNoScannerNoParser(type: Copy) {
+  from 'resources/scanner_and_parser/'
+  into 'build/classes/java/main/minic'
+  include '**/*.class'
+}
+
+task copyClassfilesNoScannerNoParserNoSem(type: Copy) {
+  from 'resources/scanner_and_parser_and_sem/'
+  into 'build/classes/java/main/minic'
+  include '**/*.class'
+}
+
+task jarNoScanner(dependsOn: [
+  'jar',
+  'copyClassfilesNoScanner'
+])
+
+task jarNoScannerNoParser(dependsOn: [
+  'jar',
+  'copyClassfilesNoScannerNoParser'
+])
+
+task jarNoScannerNoParserNoSem(dependsOn: [
+  'jar',
+  'copyClassfilesNoScannerNoParserNoSem'
+])
+
+task compile(dependsOn: [
+  'compileJava'
+])
+
+task compileNoScanner(dependsOn: [
+  'compileJava',
+  'copyClassfilesNoScanner'
+])
+
+task compileNoScannerNoParser(dependsOn: [
+  'compileJava',
+  'copyClassfilesNoScannerNoParser'
+])
+
+task compileNoScannerNoParserNoSem(dependsOn: [
+  'compileJava',
+  'copyClassfilesNoScannerNoParserNoSem'
+])
+
+//
+// Set execution order of tasks, but not dependencies:
+//
+// A.mustRunAfter B means that if both tasks A and B are
+// scheduled for execution, then B must run first.
+//
+copyClassfilesNoScanner.mustRunAfter compileJava
+jar.mustRunAfter copyClassfilesNoScanner
+
+copyClassfilesNoScannerNoParser.mustRunAfter compileJava
+jar.mustRunAfter copyClassfilesNoScannerNoParser
+
+copyClassfilesNoScannerNoParserNoSem.mustRunAfter compileJava
+jar.mustRunAfter copyClassfilesNoScannerNoParserNoSem
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['minic']
+    }
+  }
+}
